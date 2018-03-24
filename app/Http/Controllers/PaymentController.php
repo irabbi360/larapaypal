@@ -69,10 +69,10 @@ class PaymentController extends Controller
         } catch (\PayPal\Exception\PPConnectionException $ex) {
             if (\Config::get('app.debug')) {
                 \Session::put('error', 'Connection timeout');
-                return Redirect::route('paypaypal');
+                return Redirect::route('paypal');
             } else {
                 \Session::put('error', 'Some error occur, sorry for inconvenient');
-                return Redirect::route('paypaypal');
+                return Redirect::route('paypal');
             }
         }
         foreach ($payment->getLinks() as $link) {
@@ -88,7 +88,7 @@ class PaymentController extends Controller
             return Redirect::away($redirect_url);
         }
         \Session::put('error', 'Unknown error occurred');
-        return Redirect::route('paypaypal');
+        return Redirect::route('paypal');
     }
 
     public function getPaymentStatus()
@@ -99,7 +99,7 @@ class PaymentController extends Controller
         Session::forget('paypal_payment_id');
         if (empty(Input::get('PayerID')) || empty(Input::get('token'))) {
             \Session::put('error', 'Payment failed');
-            return Redirect::route('/paypal');
+            return Redirect::route('paypal');
         }
         $payment = Payment::get($payment_id, $this->_api_context);
         $execution = new PaymentExecution();
@@ -108,7 +108,7 @@ class PaymentController extends Controller
         $result = $payment->execute($execution, $this->_api_context);
         if ($result->getState() == 'approved') {
             \Session::put('success', 'Payment success');
-            return Redirect::route('/paypal');
+            return Redirect::route('paypal');
         }
         \Session::put('error', 'Payment failed');
         return Redirect::route('/paypal');

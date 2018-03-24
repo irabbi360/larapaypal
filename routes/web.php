@@ -24,8 +24,8 @@ Route::get('login/facebook/callback', 'Auth\LoginController@handleProviderCallba
 
 
 //payment form
-Route::get('paypal', 'PaymentController@index');
+Route::get('/paypal', 'PaymentController@index');
 // route for processing payment
-Route::post('paypal', 'PaymentController@payWithpaypal');
+Route::post('/paypal', 'PaymentController@payWithpaypal');
 // route for check status of the payment
 Route::get('status', 'PaymentController@getPaymentStatus')->name("status");
